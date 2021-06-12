@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-print "Exercise 1\n";
+print "Exercise 2\n";
 
 unless ( $ARGV[0] )
 {
@@ -24,13 +24,15 @@ my $line = 1;
 while (my $log_str = <$f>)
 {
  chomp $log_str;
- if (exists $ks{$log_str} )
+ my $an_key = make_key($log_str);
+
+ if (exists $ks{$an_key} )
  {
-  push @{$ks{$log_str}}, $line;
+  push @{$ks{$an_key}}, [$log_str, $line];
  }
  else
  {
-  $ks{$log_str} = [$line];
+  $ks{$an_key} = [ [$log_str, $line] ];
  } 
  $line++;
 }
@@ -45,14 +47,25 @@ foreach my $k ( keys %ks )
 } 
 
 
+
+sub make_key
+{
+ my $s = shift;
+ return join '', sort map{lc($_)} split //, $s;
+}
+
 sub show_duble
 {
  my ($ar, $key) = @_;
 
  print "-"x20,"\n";
- print "String: $key\n";
- print "Duplicates at lines: ", (join ',', @$ar ), "\n";
+ print "Anagram list: \n";
+ for my $inst ( @$ar )
+ {
+  printf("Instance: %s at line %d\n", $$inst[0], $$inst[1]);
+ }
 }
+
 
 sub Usage
 {
